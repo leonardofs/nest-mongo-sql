@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: kuantokusta
+      POSTGRES_USER: kuantokusta
     ports:
       - "5432:5432"
     networks:
@@ -26,6 +27,7 @@ services:
 
   # mongodb:
   #   image: mongo
+  #   restart: always
   #   environment:
   #     MONGO_INITDB_ROOT_USERNAME: root
   #     MONGO_INITDB_ROOT_PASSWORD: kuantokusta
@@ -43,6 +45,7 @@ services:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: kuantokusta
         POSTGRES_DB: kuantokusta
+      
     ports:
       - "3001:3001"
     networks:
