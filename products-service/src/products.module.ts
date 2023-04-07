@@ -16,9 +16,9 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
       database: process.env.TYPEORM_DATABASE,
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
       synchronize: true,
-    } as TypeOrmModuleOptions)
+    } as TypeOrmModuleOptions),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [ProductsController],
+  providers: [ProductsService],
 })
 export class ProductModule {}

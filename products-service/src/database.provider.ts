@@ -11,9 +11,7 @@ export const databaseProviders = [
         username: 'root',
         password: 'root',
         database: 'test',
-        entities: [
-            './entities/*.entity{.ts,.js}',
-        ],
+        entities: ['./entities/*.entity{.ts,.js}'],
         migrations: [],
         // seed: [], TODO implements typeorm-extension
         synchronize: true,

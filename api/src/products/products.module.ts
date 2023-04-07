@@ -9,13 +9,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       {
         name: 'PRODUCTS_SERVICE',
         transport: Transport.TCP,
-        options : {
-          port: 8081
-        }
-      }
+        options: {
+          port: 8081,
+        },
+      },
     ]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
 })
 export class ProductsModule {}

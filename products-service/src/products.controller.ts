@@ -7,10 +7,8 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  async getProducts(): Promise<string | ProductsEntity []> { // TODO REMOVER STRING
+  async getProducts(): Promise<string | ProductsEntity[]> {
+    // TODO REMOVER STRING
     return await this.productsService.findAll();
-   
   }
-
-
 }
