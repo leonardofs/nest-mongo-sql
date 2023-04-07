@@ -35,7 +35,14 @@ services:
   #     - kuantokusta
 
   products:
-    build: ./products-service/
+    build:
+      context: ./products-service
+      args:
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: "5432"
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: kuantokusta
+        POSTGRES_DB: kuantokusta
     ports:
       - "3001:3001"
     networks:
@@ -44,7 +51,14 @@ services:
       - postgres
 
   # shoppingcart:
-  #    build: ./shopping-cart-service/
+  #   build:
+  #     context: ./shopping-cart-service
+  #     args:
+  #       MONGODB_HOST: mongodb
+  #       MONGODB_PORT: "27017"
+  #       MONGODB_USER: root
+  #       MONGODB_PASSWORD: kuantokusta
+  #       MONGODB_DATABASE: kuantokusta
   #   ports:
   #     - "3002:3002"
   #   networks:
@@ -53,7 +67,8 @@ services:
   #     - mongodb
 
   api:
-    build: ./api/
+    build:
+      context: ./api
     ports:
       - "3000:3000"
     networks:
