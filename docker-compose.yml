@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: kuantokusta
+    ports:
+      - "5432:5432"
+    networks:
+      - kuantokusta
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@domain.com
+      PGADMIN_DEFAULT_PASSWORD: kuantokusta
+      PGADMIN_LISTEN_PORT: 5000
+    ports:
+      - "5000:5000"
+    networks:
+      - kuantokusta
+    depends_on:
+      - postgres
+
+  # mongodb:
+  #   image: mongo
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: kuantokusta
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - kuantokusta
+
+  products:
+    build: ./products-service/
+    ports:
+      - "3001:3001"
+    networks:
+      - kuantokusta
+    depends_on:
+      - postgres
+
+  # shoppingcart:
+  #    build: ./shopping-cart-service/
+  #   ports:
+  #     - "3002:3002"
+  #   networks:
+  #     - kuantokusta
+  #   depends_on:
+  #     - mongodb
+
+  api:
+    build: ./api/
+    ports:
+      - "3000:3000"
+    networks:
+      - kuantokusta
+
+networks:
+  kuantokusta:
+    driver: bridge
