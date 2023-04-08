@@ -13,7 +13,10 @@ export class ProductsEntity {
   id: string;
 
   @Column({ nullable: false })
-  description: string;
+  name: string;
+
+  @Column({ nullable: true })
+  description?: string;
 
   @Column({ type: 'decimal', scale: 2, nullable: false })
   price: number;

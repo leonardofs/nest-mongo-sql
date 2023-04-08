@@ -15,6 +15,8 @@ async function bootstrap() {
       'Teste de conhecimento do uso de Nest.js,Typescript, Microserviços, Mongoose e Typeorm',
     )
     .setVersion('1.0')
+    .addTag('Products')
+    // .addTag('Shopping Cart')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

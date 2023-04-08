@@ -4,7 +4,10 @@ import {
   // UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+//@ApiBearerAuth()
+@ApiTags('Products')
 @Controller('Products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

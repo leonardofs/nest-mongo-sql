@@ -25,12 +25,13 @@ export class ProductSeeder {
       for (let i = 0; i < samples; i++) {
         const product = new ProductsEntity();
 
-        product.description = faker.commerce.productName();
+        product.name = faker.commerce.productName();
+        product.description = faker.commerce.productDescription();
         product.price = Number(faker.commerce.price());
 
         products.push(product);
       }
-      await this.productRepository.save(products);
+      await this.productsRepository.save(products);
     } else {
       const logger = new Logger('Seeder');
       logger.warn('Banco já populado');

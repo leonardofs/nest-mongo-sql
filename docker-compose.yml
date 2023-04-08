@@ -41,13 +41,15 @@ services:
       context: ./products-service
       args:
         POSTGRES_HOST: postgres
-        POSTGRES_PORT: "5432"
-        POSTGRES_USER: postgres
+        POSTGRES_PORT: 5432
+        POSTGRES_USER: kuantokusta
         POSTGRES_PASSWORD: kuantokusta
         POSTGRES_DB: kuantokusta
       
     ports:
       - "3001:3001"
+    expose:
+      - "3001"
     networks:
       - kuantokusta
     depends_on:
@@ -64,6 +66,8 @@ services:
   #       MONGODB_DATABASE: kuantokusta
   #   ports:
   #     - "3002:3002"
+  #   expose:
+  #     - "3002"
   #   networks:
   #     - kuantokusta
   #   depends_on:
@@ -72,6 +76,9 @@ services:
   api:
     build:
       context: ./api
+      args:
+         PRODUCTS_DNS: products
+         CART_DNS: shoppingcart
     ports:
       - "3000:3000"
     networks:

@@ -13,6 +13,7 @@ export class ProductsService {
 
   async findAll(page?: number, limit?: number) {
     const options: FindManyOptions<ProductsEntity> = {
+      select: ['id', 'description', 'name', 'price'],
       where: {
         deletedAt: IsNull(),
       },
