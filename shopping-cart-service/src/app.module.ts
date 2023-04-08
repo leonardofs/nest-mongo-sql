@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ShoppingCartModule } from './shopping-cart/shopping-cart.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { typeOrmConfigAsync } from './typeorm.config';
 
 @Module({
-  imports: [ShoppingCartModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
+    ShoppingCartModule,
+  ],
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
