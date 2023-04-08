@@ -1,39 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductsEntity } from './entities/products.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, IsNull, Repository } from 'typeorm';
-import { ProductSeeder } from 'src/database/seed/products.sedder';
+import { ProductsRepository } from './products.repository';
+import { ProductsEntity } from './schema/products.schema';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectRepository(ProductsEntity)
-    private readonly productsRepository: Repository<ProductsEntity>,
-  ) {}
+  constructor(private readonly productsRepository: ProductsRepository) {}
 
-  async findAll(page?: number, limit?: number) {
-    const options: FindManyOptions<ProductsEntity> = {
-      select: ['id', 'description', 'name', 'price'],
-      where: {
-        deletedAt: IsNull(),
-      },
+  async findAll(page?: number, limit?: number): Promise<ProductsEntity[]> {
+    const options = {
+      page,
+      limit,
     };
-
-    if (page && limit) {
-      // optional pagination
-      const skip = (page - 1) * limit;
-      options.take = limit;
-      options.skip = skip;
-    }
-
-    return await this.productsRepository.find(options);
+    return this.productsRepository.findAll(options);
   }
 
-  async findOneOrFail(options: FindOneOptions<ProductsEntity>) {
-    try {
-      return await this.productsRepository.findOneOrFail(options);
-    } catch (error) {
-      throw new NotFoundException(error.message);
+  async findById(productId: string): Promise<ProductsEntity> {
+    const product = await this.productsRepository.findById(productId);
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
     }
+    return product;
   }
 }

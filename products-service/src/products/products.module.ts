@@ -1,18 +1,21 @@
-import { Module, OnModuleInit } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { ProductsEntity } from './entities/products.entity';
-import { ProductSeeder } from 'src/database/seed/products.sedder';
+
+import { ProductsRepository } from './products.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProductsEntity } from './schema/products.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductsEntity])],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: ProductsEntity.name,
+        schema: ProductsEntity,
+      },
+    ]),
+  ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductSeeder],
+  providers: [ProductsService, ProductsRepository],
 })
-export class ProductsModule implements OnModuleInit {
-  constructor(private readonly productSeeder: ProductSeeder) {}
-  onModuleInit() {
-    this.productSeeder.run();
-  }
-}
+export class ProductsModule {}

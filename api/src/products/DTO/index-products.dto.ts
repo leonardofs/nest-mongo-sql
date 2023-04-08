@@ -6,14 +6,14 @@ export class IndexProductsDto {
     example: 1,
     description: 'database generated and auto increment',
   })
-  id: string;
+  productId: string;
 
-  @ApiProperty({ example: faker.commerce.productName() })
+  @ApiProperty({ nullable: false, example: faker.commerce.productName() })
   name: string;
 
   @ApiProperty({ example: faker.commerce.productDescription(), nullable: true })
   description?: string;
 
-  @ApiProperty({ nullable: false, example: faker.commerce.price() })
+  @ApiProperty({ nullable: false, example: faker.finance.amount(0, 200, 2) })
   price: number;
 }

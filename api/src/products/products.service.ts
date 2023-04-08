@@ -9,7 +9,7 @@ export class ProductsService {
   ) {}
   //  @Inject('SHOPPINGCART') private readonly ShoppingCartClient: ShoppingCartProxy,
 
-  getProducts(): Observable<IndexProductsDto> {
+  getProducts(): Observable<IndexProductsDto[]> {
     // todo create ProductsModel
     return this.productsClient.send({ cmd: 'get-products' }, {});
   }
