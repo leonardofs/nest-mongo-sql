@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductsEntity } from './entities/products.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, IsNull, Repository } from 'typeorm';
+import { ProductSeeder } from 'src/database/seed/products.sedder';
 
 @Injectable()
 export class ProductsService {
@@ -10,10 +11,21 @@ export class ProductsService {
     private readonly productsRepository: Repository<ProductsEntity>,
   ) {}
 
-  async findAll() {
-    return 'chegou ao findAll';
-    // TODO deixar apenas metodo
-    //return await this.productsRepository.find();
+  async findAll(page?: number, limit?: number) {
+    const options: FindManyOptions<ProductsEntity> = {
+      where: {
+        deletedAt: IsNull(),
+      },
+    };
+
+    if (page && limit) {
+      // optional pagination
+      const skip = (page - 1) * limit;
+      options.take = limit;
+      options.skip = skip;
+    }
+
+    return await this.productsRepository.find(options);
   }
 
   async findOneOrFail(options: FindOneOptions<ProductsEntity>) {

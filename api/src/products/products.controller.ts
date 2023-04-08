@@ -12,6 +12,6 @@ export class ProductsController {
   @Get()
   // UseGuards()
   async index() {
-    return await this.productsService.getProducts();
+    return this.productsService.getProducts();
   }
 }

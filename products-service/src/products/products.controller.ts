@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductsEntity } from './entities/products.entity';
 import { MessagePattern } from '@nestjs/microservices';
@@ -8,7 +8,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @MessagePattern({ cmd: 'get-products' })
-  async getProducts(): Promise<string | ProductsEntity[]> {
+  async getProducts(): Promise<string | ProductsEntity[] | any> {
     // TODO REMOVER STRING
     return await this.productsService.findAll();
   }

@@ -1,26 +1,19 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ProductsController } from './products/products.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductsEntity } from './products/entities/products.entity';
 import { ProductsModule } from './products/products.module';
+import { typeOrmConfigAsync } from './database/typeorm.config';
+import { ProductSeeder } from './database/seed/products.sedder';
+import { ProductsEntity } from './products/entities/products.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT) || 5432,
-      username: process.env.POSTGRES_USER || 'kuantokusta',
-      password: process.env.POSTGRES_PASSWORD || 'kuantokusta',
-      database: process.env.POSTGRES_DB || 'kuantokusta',
-      entities: [ProductsEntity],
-      synchronize: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
+    TypeOrmModule.forFeature([ProductsEntity]),
     ProductsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [ProductSeeder],
 })
 export class AppModule {}

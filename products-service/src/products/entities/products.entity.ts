@@ -12,10 +12,10 @@ export class ProductsEntity {
   @PrimaryGeneratedColumn('increment')
   id: string;
 
-  @Column()
+  @Column({ nullable: false })
   description: string;
 
-  @Column()
+  @Column({ type: 'decimal', scale: 2, nullable: false })
   price: number;
 
   @CreateDateColumn({ name: 'created_at' })

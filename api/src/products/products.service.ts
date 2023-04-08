@@ -8,9 +8,8 @@ export class ProductsService {
   ) {}
   //  @Inject('SHOPPINGCART') private readonly ShoppingCartClient: ShoppingCartProxy,
 
-  async getProducts() {
+  getProducts() {
     // todo create ProductsModel
-    const message = await this.productsClient.send({ cmd: 'get-products' }, {});
-    return message;
+    return this.productsClient.send({ cmd: 'get-products' }, {});
   }
 }
