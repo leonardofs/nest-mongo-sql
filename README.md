@@ -25,9 +25,9 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [X] create dockerfile for products ms
 
-[ ] implement products connection typeorm
+[X] implement products connection typeorm
 
-[ ] create products seed
+[X] create products seed
 
 [X] create  shopping cart microservice
 
@@ -44,7 +44,7 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [X] add all services, pg and mongo  to dockerfile
 
-[ ] test base functions
+[ ] test all wanted functions running on docker
 
 [ ] implemnts swagger to API
 
