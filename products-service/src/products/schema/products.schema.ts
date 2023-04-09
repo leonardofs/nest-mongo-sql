@@ -1,16 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
-import * as mongooseSeq from 'mongoose-sequence';
-
-const AutoIncrement = mongooseSeq(mongoose);
+import { Document, HydratedDocument } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 @Schema({ timestamps: true })
-export class ProductsEntity extends Document {
-  @Prop({
-    type: Number,
-    unique: true,
-  })
-  productId: number;
+export class Product extends Document {
+  @Prop({ type: String, default: uuidv4 })
+  _id: string;
 
   @Prop({ required: true })
   name: string;
@@ -22,10 +17,5 @@ export class ProductsEntity extends Document {
   price: number;
 }
 
-export const ProductsSchema = SchemaFactory.createForClass(
-  ProductsEntity,
-).plugin(AutoIncrement, {
-  id: 'product_id',
-  inc_field: 'productId',
-  //start_seq: 1,
-});
+export type ProductDocument = HydratedDocument<Product>;
+export const ProductsSchema = SchemaFactory.createForClass(Product);

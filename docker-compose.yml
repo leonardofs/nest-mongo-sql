@@ -36,8 +36,6 @@ services:
       
     ports:
       - "3001:3001"
-    expose:
-      - "3001"
     networks:
       - kuantokusta
     depends_on:
@@ -54,8 +52,6 @@ services:
         POSTGRES_DB: kuantokusta
     ports:
       - "3002:3002"
-    expose:
-      - "3002"
     networks:
       - kuantokusta
     depends_on:
@@ -102,4 +98,4 @@ services:
 
 networks:
   kuantokusta:
-    driver: bridge
+    driver: host
