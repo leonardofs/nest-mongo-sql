@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3001
 
 # comando de inicialização
-CMD ["npm", "run", "start:dev"]                
+CMD ["npm", "run", "start:docker"]                
