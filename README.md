@@ -31,13 +31,19 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [X] create  shopping cart microservice
 
+[X] create update shopping cart services
+
+[X] create update shopping cart services
+
+[ ] implement class validator in both microsservices
+
 [ ] create shopping cart module on api
 
 [ ] implement comunication api x cart
 
 [ ] implement comunication cart x products
 
-[ ] implement uso of mongo (mongoose)
+[X] implement uso of mongo (mongoose)
 
 
 [X] create dockerfile for  shopping cart ms
@@ -48,7 +54,7 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [ ] implemnts swagger to API
 
-[ ] implements auth microservice or module}
+[ ] implements auth microservice or module
 
 [ ] implements unit tests
 

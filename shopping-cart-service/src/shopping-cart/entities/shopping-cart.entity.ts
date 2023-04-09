@@ -6,12 +6,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductsEntity } from './products.entity';
+import { Product } from './products.entity';
 
 @Entity('Shopping_Cart')
 export class ShoppingCart {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
-  shoppingCartId: string;
+  shoppingCartId: number;
   @Column({ name: 'user_id', type: 'int', nullable: false })
   userId: number;
 
@@ -28,7 +28,7 @@ export class ShoppingCart {
   totalPrice: number;
 
   @Column('jsonb', { nullable: true })
-  products?: ProductsEntity[];
+  products?: Product[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
