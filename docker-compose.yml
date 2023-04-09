@@ -48,11 +48,13 @@ services:
       POSTGRES_USER: kuantokusta
       POSTGRES_PASSWORD: kuantokusta
       POSTGRES_DB: kuantokusta
+      PRODUCTS_DNS: products
       PORT: 10422
     networks:
       - kuantokusta
     depends_on:
       - mongodb
+      - products
 
   api:
     build:
@@ -91,6 +93,8 @@ services:
       - mongodb
     networks:
       - kuantokusta
+    ports:
+      - "18085:8081"
 
 
 networks:

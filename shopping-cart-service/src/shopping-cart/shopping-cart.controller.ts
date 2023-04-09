@@ -11,41 +11,30 @@ type updateReturn = {
 export class ShoppingCartController {
   constructor(private readonly shoppingCartService: ShoppingCartService) {}
 
-  // @MessagePattern('findAllShoppingCart')
-  // findAll() {
-  //   return this.shoppingCartService.findAll();
-  // }
+  @MessagePattern({ cmd: 'find-carts-for-user' })
+  async findAllbyUser(@Payload() id: number) {
+    return this.shoppingCartService.findAllbyUser(id);
+  }
 
-  // @MessagePattern('findOneShoppingCart')
-  // findOne(@Payload() id: number) {
-  //   return this.shoppingCartService.findOne(id);
-  // }
-
-  @MessagePattern('addToShoppingCart')
+  @MessagePattern({ cmd: 'add-to-shopping-cart' })
   async addToCart(
-    @Payload() shoppingCart: ShoppingCartDto,
-  ): Promise<updateReturn> {
+    @Payload() shoppingCart: Partial<ShoppingCartDto>,
+  ): Promise<ShoppingCartDto> {
     try {
-      return await this.shoppingCartService.updateShoppingCart(
-        shoppingCart,
-        'add',
-      );
+      return await this.shoppingCartService.addProducts(shoppingCart);
     } catch (error) {
-      return { success: false, message: error.message };
+      throw error;
     }
   }
 
-  @MessagePattern('removefromShoppingCart')
+  @MessagePattern({ cmd: 'remove-from-shopping-cart' })
   async removeToCart(
     @Payload() shoppingCart: ShoppingCartDto,
-  ): Promise<updateReturn> {
+  ): Promise<ShoppingCartDto> {
     try {
-      return await this.shoppingCartService.updateShoppingCart(
-        shoppingCart,
-        'sub',
-      );
+      return await this.shoppingCartService.removeProducts(shoppingCart);
     } catch (error) {
-      return { success: false, message: error.message };
+      throw error;
     }
   }
 }

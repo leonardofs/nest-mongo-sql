@@ -1,6 +1,6 @@
 import { ShoppingCartDto } from './shopping-cart.dto';
 
-export type addToShoppingCartDto = Omit<
+export type updateShoppingCartDto = Omit<
   ShoppingCartDto,
   'userId' | 'totalPrice' | 'totalQuantity'
 >;

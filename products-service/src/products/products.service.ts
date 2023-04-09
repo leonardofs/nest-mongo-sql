@@ -9,10 +9,6 @@ import { ProductDto } from './products.dto';
 export class ProductsService {
   private readonly productModel: Model<ProductDocument>;
   private readonly logger: Logger;
-  // constructor(@InjectConnection() private connection: Connection) {
-  //   this.logger = new Logger('ProductRepository');
-  //   this.productModel = connection.model<ProductDocument>(Product.name);
-  // }
 
   constructor(
     @InjectModel(Product.name) private readonly model: Model<ProductDocument>,
@@ -42,11 +38,11 @@ export class ProductsService {
     return products.map((product) => this.mapToDto(product));
   }
 
-  async findById(productId: string): Promise<ProductDto | null> {
+  async findById(productId: string): Promise<ProductDto> {
     const product = await this.productModel
       .findOne({ _id: productId, deletedAt: null })
       .exec();
-    if (product) return null;
+    if (!product) return null;
 
     return this.mapToDto(product);
   }

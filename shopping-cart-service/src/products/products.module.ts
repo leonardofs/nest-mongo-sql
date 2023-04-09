@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ShoppingCartService } from './shopping-cart.service';
-import { ShoppingCartController } from './shopping-cart.controller';
+import { ProductsService } from './products.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 const port = 10421;
@@ -16,7 +15,7 @@ const host = isDocker ? process.env.PRODUCTS_DNS : 'localhost';
       },
     ]),
   ],
-  controllers: [ShoppingCartController],
-  providers: [ShoppingCartService],
+  providers: [ProductsService],
+  exports: [ProductsService],
 })
-export class ShoppingCartModule {}
+export class ProductsModule {}

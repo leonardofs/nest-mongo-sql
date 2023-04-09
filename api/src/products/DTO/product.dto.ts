@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 
-export class IndexProductsDto {
+export class ProductDto {
   @ApiProperty({
     example: 1,
     description: 'database generated and auto increment',

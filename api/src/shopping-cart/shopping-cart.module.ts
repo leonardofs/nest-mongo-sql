@@ -6,7 +6,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 const port = 10422;
 const isDocker = process.env.NODE_ENV === 'docker';
 const host = isDocker ? process.env.SHOPPING_CART_DNS : 'localhost';
-
 @Module({
   imports: [
     ClientsModule.register([

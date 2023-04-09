@@ -4,8 +4,13 @@ import {
   // UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
-import { IndexProductsDto } from './DTO/index-products.dto';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { ProductDto } from './DTO/product.dto';
 import { Observable } from 'rxjs';
 
 //@ApiBearerAuth()
@@ -15,9 +20,13 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  @ApiResponse({ status: '2XX', description: 'Retorna a lista de produtos' })
+  //@ApiBearerAuth()
+  @ApiOkResponse({
+    type: [ProductDto],
+    description: 'Retorna a lista de produtos',
+  })
   // UseGuards()
-  async index(): Promise<Observable<IndexProductsDto[]>> {
+  async index(): Promise<Observable<ProductDto[]>> {
     return this.productsService.getProducts();
   }
 }

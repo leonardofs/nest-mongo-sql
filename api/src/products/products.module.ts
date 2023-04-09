@@ -18,5 +18,6 @@ const host = isDocker ? process.env.PRODUCTS_DNS : 'localhost';
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
+  exports: [ProductsService],
 })
 export class ProductsModule {}
