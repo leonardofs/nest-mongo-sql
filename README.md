@@ -1,6 +1,6 @@
 # nest-mongo-sql
 ## Dependências
-ter is seguintes softwares instalados  
+ter os seguintes softwares instalados seguintes softwares instalados  
 
 ```
 docker   
@@ -8,7 +8,15 @@ docker-compose
 ```
 
 ## Execução
-para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
+para iniciar todo o ambiente apenas execute no terminal
+
+ ```docker-compose build```
+
+ e depois
+
+ ```docker-compose up```
+
+
 ## TO DO
 
 [X] create service api
@@ -35,6 +43,10 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [X] create update shopping cart services
 
+[ ] move application ports to docker-compose envs
+
+[ ] create text abou posible improvements in security, 12 factors and resources
+
 [ ] implement class validator in both microsservices
 
 [ ] create shopping cart module on api
@@ -45,7 +57,6 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 
 [X] implement uso of mongo (mongoose)
 
-
 [X] create dockerfile for  shopping cart ms
 
 [X] add all services, pg and mongo  to dockerfile
@@ -53,6 +64,8 @@ para iniciar todo o ambiente apenas execute no terminal ```docker-compose up```
 [ ] test all wanted functions running on docker
 
 [ ] implemnts swagger to API
+
+[ ] update readme
 
 [ ] implements auth microservice or module
 
