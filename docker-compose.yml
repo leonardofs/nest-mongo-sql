@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   postgres:
     image: postgres
@@ -6,12 +7,10 @@ services:
     environment:
       POSTGRES_PASSWORD: kuantokusta
       POSTGRES_USER: kuantokusta
-    ports:
-      - "5432:5432"
-    expose: 
-      - "5432"
     networks:
       - kuantokusta
+    ports:
+      - "12545:5432"
       
   mongodb:
     image: mongo
@@ -19,23 +18,22 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: kuantokusta
-    ports:
-      - "27017:27017"
     networks:
       - kuantokusta
+    ports:
+      - "27025:27017"
 
   products:
     build:
       context: ./products-service
-      args:
-        MONGODB_HOST: mongodb
-        MONGODB_PORT: "27017"
-        MONGODB_USER: root
-        MONGODB_PASSWORD: kuantokusta
-        MONGODB_DATABASE: kuantokusta
-      
-    ports:
-      - "3001:3001"
+    environment:
+      MONGODB_HOST: mongodb
+      MONGO_MAPPED_PORT: 27025
+      MONGODB_USER: root
+      MONGODB_PASSWORD: kuantokusta
+      MONGODB_DATABASE: kuantokusta
+      PORT: 10421
+
     networks:
       - kuantokusta
     depends_on:
@@ -44,14 +42,13 @@ services:
   shoppingcart:
     build:
       context: ./shopping-cart-service
-      args:
-        POSTGRES_HOST: postgres
-        POSTGRES_PORT: 5432
-        POSTGRES_USER: kuantokusta
-        POSTGRES_PASSWORD: kuantokusta
-        POSTGRES_DB: kuantokusta
-    ports:
-      - "3002:3002"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_MAPPED_PORT: 12545
+      POSTGRES_USER: kuantokusta
+      POSTGRES_PASSWORD: kuantokusta
+      POSTGRES_DB: kuantokusta
+      PORT: 10422
     networks:
       - kuantokusta
     depends_on:
@@ -60,32 +57,32 @@ services:
   api:
     build:
       context: ./api
-      args:
-         PRODUCTS_DNS: products
-         CART_DNS: shoppingcart
-    ports:
-      - "3000:3000"
+    environment:
+      PRODUCTS_DNS: products
+      SHOPPING_CART_DNS: shoppingcart
+      PORT: 10421
+
     networks:
       - kuantokusta
-
+    depends_on:
+      - products
+      - shoppingcart
   pgadmin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: user@domain.com
       PGADMIN_DEFAULT_PASSWORD: kuantokusta
-      PGADMIN_LISTEN_PORT: 5000
-    ports:
-      - "5000:5000"
+      PGADMIN_LISTEN_PORT: 15020
     networks:
       - kuantokusta
     depends_on:
       - postgres
+    ports:
+      - "15020:15020"
 
   mongo-express:
     image: mongo-express
     restart: always
-    ports:
-      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
@@ -98,4 +95,4 @@ services:
 
 networks:
   kuantokusta:
-    driver: host
+    driver: bridge
