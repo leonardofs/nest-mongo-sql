@@ -42,32 +42,31 @@ export class ShoppingCartController {
     return this.shoppingCartService.findCartsFromUser(userId);
   }
 
-  @ApiOperation({ summary: 'Cria carrinho e adiciona um produto a ele' })
+  @ApiOperation({
+    summary: 'Cria carrinho e adiciona um ou mais produtos a ele',
+  })
   @ApiOkResponse({
     description: 'Carrinho criado com sucesso',
     type: CartDto,
   })
-  @ApiBody({ type: AddProductDto })
+  @ApiBody({ type: [AddProductDto] })
   @Post('/')
-  async createCartAndaddProduct(
-    @Param('cartId') cartId: string,
-    @Body() addProductDto: AddProductDto,
-  ) {
-    return this.shoppingCartService.addProduct(null, addProductDto);
+  async createCartAndaddProduct(@Body() addProducts: AddProductDto[]) {
+    return this.shoppingCartService.addProduct(null, addProducts);
   }
 
-  @ApiOperation({ summary: 'Adiciona um produto ao carrinho' })
+  @ApiOperation({ summary: 'Adiciona um ou mais produtos ao carrinho' })
   @ApiOkResponse({
     description: 'Carrinho atualizado com sucesso',
     type: CartDto,
   })
-  @ApiBody({ type: AddProductDto })
-  @Put(':cartId/product')
+  @ApiBody({ type: [AddProductDto] })
+  @Put(':cartId')
   async addProduct(
     @Param('cartId') cartId: string,
-    @Body() addProductDto: AddProductDto,
+    @Body() addProducts: AddProductDto[],
   ) {
-    return this.shoppingCartService.addProduct(cartId, addProductDto);
+    return this.shoppingCartService.addProduct(cartId, addProducts);
   }
 
   @ApiOperation({
@@ -78,12 +77,12 @@ export class ShoppingCartController {
     description: 'Carrinho atualizado com sucesso',
     type: CartDto,
   })
-  @ApiBody({ type: RemoveProductDto })
-  @Delete(':cartId/product')
+  @ApiBody({ type: [RemoveProductDto] })
+  @Delete(':cartId')
   async removeProduct(
     @Param('cartId') cartId: string,
-    @Body() removeProductDto: RemoveProductDto,
+    @Body() removeProducts: RemoveProductDto[],
   ) {
-    return this.shoppingCartService.removeProduct(cartId, removeProductDto);
+    return this.shoppingCartService.removeProduct(cartId, removeProducts);
   }
 }

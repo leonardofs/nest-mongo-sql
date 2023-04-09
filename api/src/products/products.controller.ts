@@ -9,6 +9,7 @@ import {
   ApiTags,
   ApiResponse,
   ApiOkResponse,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { ProductDto } from './DTO/product.dto';
 import { Observable } from 'rxjs';
@@ -21,6 +22,9 @@ export class ProductsController {
 
   @Get()
   //@ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Retorna a lista de produtos',
+  })
   @ApiOkResponse({
     type: [ProductDto],
     description: 'Retorna a lista de produtos',

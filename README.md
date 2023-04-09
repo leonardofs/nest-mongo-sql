@@ -43,17 +43,13 @@ para iniciar todo o ambiente apenas execute no terminal
 
 [X] create update shopping cart services
 
-[ ] move application ports to docker-compose envs
+[X] move application ports to docker-compose envs
 
-[ ] create text abou posible improvements in security, 12 factors and resources
+[X] create shopping cart module on api
 
-[ ] implement class validator in both microsservices
+[X] implement comunication api x cart
 
-[ ] create shopping cart module on api
-
-[ ] implement comunication api x cart
-
-[ ] implement comunication cart x products
+[X] implement comunication cart x products
 
 [X] implement uso of mongo (mongoose)
 
@@ -61,11 +57,15 @@ para iniciar todo o ambiente apenas execute no terminal
 
 [X] add all services, pg and mongo  to dockerfile
 
+[ ] implement class validator in both microsservices
+
 [ ] test all wanted functions running on docker
 
 [ ] implemnts swagger to API
 
 [ ] update readme
+
+[ ] create text about posibles improvements in security, 12 factors and resources
 
 [ ] implements auth microservice or module
 

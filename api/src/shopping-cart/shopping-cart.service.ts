@@ -24,9 +24,9 @@ export class ShoppingCartService {
     return resultCart;
   }
 
-  removeProduct(cartId: string, removeProductDto: RemoveProductDto): CartDto {
+  removeProduct(cartId: string, removeProducts: RemoveProductDto[]): CartDto {
     const pattern = { cmd: 'remove-from-shopping-cart' };
-    const data = removeProductDto;
+    const data = removeProducts;
     let resultCart: CartDto;
     this.shoppingCartClient.send<CartDto>(pattern, data).subscribe((cart) => {
       resultCart = cart;
@@ -35,7 +35,7 @@ export class ShoppingCartService {
     });
     return resultCart;
   }
-  addProduct(cartId: string, addProductDto: AddProductDto): CartDto {
+  addProduct(cartId: string, addProductDto: AddProductDto[]): CartDto {
     const pattern = { cmd: 'add-to-shopping-cart' };
     const data = addProductDto;
     let resultCart: CartDto;
