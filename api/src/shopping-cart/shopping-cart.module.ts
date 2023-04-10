@@ -3,6 +3,7 @@ import { ShoppingCartController } from './shopping-cart.controller';
 import { ShoppingCartService } from './shopping-cart.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 const port = 10422;
 const isDocker = process.env.NODE_ENV === 'docker';
@@ -18,6 +19,6 @@ const host = isDocker ? process.env.SHOPPING_CART_DNS : 'localhost';
     ]),
   ],
   controllers: [ShoppingCartController],
-  providers: [ShoppingCartService, AuthService],
+  providers: [ShoppingCartService],
 })
 export class ShoppingCartModule {}

@@ -6,17 +6,13 @@ import {
   Param,
   Post,
   Put,
-  Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ShoppingCartService } from './shopping-cart.service';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { RemoveProductDto } from './DTO/remove-product.Dto';
