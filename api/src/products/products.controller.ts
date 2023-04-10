@@ -1,38 +1,28 @@
 import {
   Controller,
   Get,
-  Res,
   ServiceUnavailableException,
   // UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import {
-  ApiBearerAuth,
-  ApiTags,
-  ApiResponse,
-  ApiOkResponse,
-  ApiOperation,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { ProductDto } from './DTO/product.dto';
-import { NotFoundError, Observable } from 'rxjs';
-import { Response } from 'express';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
-//@ApiBearerAuth()
 @ApiTags('Products')
 @Controller('Products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  //@ApiBearerAuth()
   @ApiOperation({
     summary: 'Retorna a lista de produtos',
   })
+  @IsPublic()
   @ApiOkResponse({
     type: [ProductDto],
     description: 'Retorna a lista de produtos',
   })
-  // UseGuards()
   async index() {
     try {
       return await this.productsService.getProducts();

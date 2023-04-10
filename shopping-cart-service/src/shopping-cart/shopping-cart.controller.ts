@@ -32,7 +32,6 @@ export class ShoppingCartController {
     @Payload() shoppingCart: ShoppingCartDto,
   ): Promise<ShoppingCartDto> {
     try {
-      console.log('remove-from-shopping-cart', shoppingCart);
       return await this.shoppingCartService.removeProducts(shoppingCart);
     } catch (error) {
       throw error;

@@ -66,13 +66,7 @@ export class ShoppingCartService {
     }
     const oldProducts = [...shoppingCartExist.products];
     const updateProducts: Product[] = [...products];
-    console.log(
-      `ids ${updateProducts[0].productId} ${
-        updateProducts[0].productId
-      } are equals? ${
-        updateProducts[0].productId == updateProducts[0].productId
-      }`,
-    );
+
     updateProducts.map((updateProduct) => {
       const productIndex = oldProducts.findIndex(
         (p) => p.productId === updateProduct.productId,

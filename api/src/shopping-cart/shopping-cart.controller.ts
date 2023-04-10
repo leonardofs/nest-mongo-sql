@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ShoppingCartService } from './shopping-cart.service';
 import {
@@ -22,13 +23,16 @@ import { RemoveProductDto } from './DTO/remove-product.Dto';
 import { CartDto } from './DTO/cart.Dto';
 import { AddProductDto } from './DTO/add-product.Dto';
 import { Observable } from 'rxjs';
-
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('Cart')
 @Controller('cart')
 export class ShoppingCartController {
   constructor(private readonly shoppingCartService: ShoppingCartService) {}
 
-  @ApiBearerAuth()
   @ApiOperation({
     summary:
       'Retorna todos os carrinhos de um usuario, usa o barier token para obter o userId do usuario',
@@ -38,10 +42,8 @@ export class ShoppingCartController {
     type: [CartDto],
   })
   @Get('/')
-  findAllFromUser(): Observable<CartDto[]> {
-    //TODO pegar usuario do bearer TOKEN e injetar o valor na requisicao
-    const userId = 1;
-    // clientId obter pelo payload do jwt
+  findAllFromUser(@CurrentUser() currentUser: User): Observable<CartDto[]> {
+    const userId = currentUser.id;
     return this.shoppingCartService.findCartsFromUser(userId);
   }
 
@@ -54,9 +56,12 @@ export class ShoppingCartController {
   })
   @ApiBody({ type: [AddProductDto] })
   @Post('/')
-  async createCartAndaddProduct(@Body() addProducts: AddProductDto[]) {
-    const userId = 1;
-    //TODO userId obter pelo payload do jwt
+  async createCartAndaddProduct(
+    @CurrentUser() currentUser: User,
+    @Body() addProducts: AddProductDto[],
+  ) {
+    const userId = currentUser.id;
+
     return this.shoppingCartService.addProduct(userId, addProducts);
   }
 
@@ -68,10 +73,11 @@ export class ShoppingCartController {
   @ApiBody({ type: [AddProductDto] })
   @Put(':cartId')
   async addProduct(
+    @CurrentUser() currentUser: User,
     @Param('cartId') cartId: string,
     @Body() addProducts: AddProductDto[],
   ) {
-    const userId = 1;
+    const userId = currentUser.id;
     //TODO userId obter pelo payload do jwt
     return this.shoppingCartService.addProduct(userId, addProducts, cartId);
   }

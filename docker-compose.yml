@@ -62,6 +62,7 @@ services:
     environment:
       PRODUCTS_DNS: products
       SHOPPING_CART_DNS: shoppingcart
+      JWT_SECRET: 'JWT-Secret-Sample'
       PORT: 10421
 
     networks:
