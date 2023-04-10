@@ -12,6 +12,7 @@ import { ShoppingCartService } from './shopping-cart.service';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -20,6 +21,7 @@ import {
 import { RemoveProductDto } from './DTO/remove-product.Dto';
 import { CartDto } from './DTO/cart.Dto';
 import { AddProductDto } from './DTO/add-product.Dto';
+import { Observable } from 'rxjs';
 
 @ApiTags('Cart')
 @Controller('cart')
@@ -36,23 +38,26 @@ export class ShoppingCartController {
     type: [CartDto],
   })
   @Get('/')
-  async findAllFromUser(): Promise<CartDto[]> {
+  findAllFromUser(): Observable<CartDto[]> {
     //TODO pegar usuario do bearer TOKEN e injetar o valor na requisicao
     const userId = 1;
+    // clientId obter pelo payload do jwt
     return this.shoppingCartService.findCartsFromUser(userId);
   }
 
   @ApiOperation({
     summary: 'Cria carrinho e adiciona um ou mais produtos a ele',
   })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Carrinho criado com sucesso',
     type: CartDto,
   })
   @ApiBody({ type: [AddProductDto] })
   @Post('/')
   async createCartAndaddProduct(@Body() addProducts: AddProductDto[]) {
-    return this.shoppingCartService.addProduct(null, addProducts);
+    const userId = 1;
+    //TODO userId obter pelo payload do jwt
+    return this.shoppingCartService.addProduct(userId, addProducts);
   }
 
   @ApiOperation({ summary: 'Adiciona um ou mais produtos ao carrinho' })
@@ -66,7 +71,9 @@ export class ShoppingCartController {
     @Param('cartId') cartId: string,
     @Body() addProducts: AddProductDto[],
   ) {
-    return this.shoppingCartService.addProduct(cartId, addProducts);
+    const userId = 1;
+    //TODO userId obter pelo payload do jwt
+    return this.shoppingCartService.addProduct(userId, addProducts, cartId);
   }
 
   @ApiOperation({
@@ -83,6 +90,12 @@ export class ShoppingCartController {
     @Param('cartId') cartId: string,
     @Body() removeProducts: RemoveProductDto[],
   ) {
-    return this.shoppingCartService.removeProduct(cartId, removeProducts);
+    const userId = 1;
+    //TODO userId obter pelo payload do jwt
+    return this.shoppingCartService.removeProduct(
+      cartId,
+      userId,
+      removeProducts,
+    );
   }
 }

@@ -6,7 +6,7 @@ export class CartDto {
     description: 'ID do carrinho',
     example: 654321,
   })
-  shoppingCartId: number;
+  shoppingCartId?: number;
 
   @ApiProperty({
     description: 'ID do usuário',

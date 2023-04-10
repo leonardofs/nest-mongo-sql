@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Product, ProductDocument } from './schema/products.schema';
 import { faker } from '@faker-js/faker';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
@@ -18,8 +18,8 @@ export class ProductsService {
   }
 
   mapToDto(product: Product): ProductDto {
-    const { _id, name, description, price } = product;
-    return { productId: _id, name, description, price } as ProductDto;
+    const { _id, price, name, description } = product;
+    return { productId: _id, price, name, description } as ProductDto;
   }
 
   async findAll(options?: {
@@ -35,16 +35,25 @@ export class ProductsService {
     }
 
     const products = await query.exec();
-    return products.map((product) => this.mapToDto(product));
+
+    return products.map(this.mapToDto);
   }
 
   async findById(productId: string): Promise<ProductDto> {
-    const product = await this.productModel
-      .findOne({ _id: productId, deletedAt: null })
-      .exec();
-    if (!product) return null;
+    try {
+      const product = await this.productModel
+        .findOne({ _id: productId })
+        .exec();
 
-    return this.mapToDto(product);
+      if (!product) {
+        return null;
+      }
+
+      return this.mapToDto(product);
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException('serviço de produtos indisponivel');
+    }
   }
 
   async create(product: Product): Promise<Product> {
@@ -56,7 +65,6 @@ export class ProductsService {
     try {
       return this.productModel.create(products);
     } catch (error) {
-      console.error('quebrou aqui');
       console.error(error);
     }
   }
@@ -68,7 +76,6 @@ export class ProductsService {
 
   async seed(samples = 10): Promise<void> {
     const hasProducts = await this.hasAny();
-    console.log(await this.findAll());
     const logger = new Logger('Seeder');
     if (!hasProducts) {
       const productsToCreate: Product[] = [];

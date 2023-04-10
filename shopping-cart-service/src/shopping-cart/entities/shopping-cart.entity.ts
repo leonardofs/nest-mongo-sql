@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Product } from './products.entity';
+import { ColumnNumericTransformer } from '../helpers/typeorm.helper';
 
 @Entity('Shopping_Cart')
 export class ShoppingCart {
@@ -24,6 +25,7 @@ export class ShoppingCart {
     scale: 2,
     nullable: false,
     default: 0,
+    transformer: new ColumnNumericTransformer(),
   })
   totalPrice: number;
 

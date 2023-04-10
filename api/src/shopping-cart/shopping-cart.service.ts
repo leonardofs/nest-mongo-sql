@@ -1,8 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CartDto } from './DTO/cart.Dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { RemoveProductDto } from './DTO/remove-product.Dto';
 import { AddProductDto } from './DTO/add-product.Dto';
+import { Observable, firstValueFrom, timeout } from 'rxjs';
 
 @Injectable()
 export class ShoppingCartService {
@@ -11,39 +17,52 @@ export class ShoppingCartService {
     private readonly shoppingCartClient: ClientProxy,
   ) {}
 
-  findCartsFromUser(userId: number): CartDto[] {
+  findCartsFromUser(userId: number) {
     const pattern = { cmd: 'find-carts-from-user' };
     const data = { userId };
-    const resultCart: CartDto[] = [];
-    this.shoppingCartClient
+
+    const carts = this.shoppingCartClient
       .send<CartDto[]>(pattern, data)
-      .subscribe((carts) => {
-        resultCart.push(...carts);
-        // TODO TRY PARSE TO CART THE RETURN OR TRHOW ERROR
-      });
-    return resultCart;
+      .pipe(timeout(5000));
+    if (!carts) {
+      throw new NotFoundException('Internal Error');
+    }
+    return carts;
   }
 
-  removeProduct(cartId: string, removeProducts: RemoveProductDto[]): CartDto {
+  async removeProduct(
+    cartId: string,
+    userId: number,
+    products: RemoveProductDto[],
+  ) {
     const pattern = { cmd: 'remove-from-shopping-cart' };
-    const data = removeProducts;
-    let resultCart: CartDto;
-    this.shoppingCartClient.send<CartDto>(pattern, data).subscribe((cart) => {
-      resultCart = cart;
-      // TODO TRY PARSE TO CART THE RETURN OR TRHOW ERROR
-      return cart;
-    });
+    const data = { userId, products };
+    const resultCart = await firstValueFrom(
+      this.shoppingCartClient.send<CartDto>(pattern, data).pipe(timeout(5000)),
+    );
+    // .pipe(map((res): CartDto => res.data))
+    // .pipe(
+    //   catchError((error) => {
+    //     console.error(error); // TODO use logger
+    //     throw new ForbiddenException('Service Unavaliable');
+    //   }),
+    // );
     return resultCart;
   }
-  addProduct(cartId: string, addProductDto: AddProductDto[]): CartDto {
+  addProduct(
+    userId: number,
+    products: AddProductDto[],
+    cartId: string = null,
+  ): Observable<CartDto> {
     const pattern = { cmd: 'add-to-shopping-cart' };
-    const data = addProductDto;
-    let resultCart: CartDto;
-    this.shoppingCartClient.send<CartDto>(pattern, data).subscribe((cart) => {
-      resultCart = cart;
-      // TODO TRY PARSE TO CART THE RETURN OR TRHOW ERROR
-      return cart;
-    });
-    return resultCart;
+    const data = { userId, cartId, products };
+
+    const cart = this.shoppingCartClient
+      .send<CartDto>(pattern, data)
+      .pipe(timeout(5000));
+    if (!cart) {
+      throw new NotFoundException('Cart not found or created');
+    }
+    return cart;
   }
 }

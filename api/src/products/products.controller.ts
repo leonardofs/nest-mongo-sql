@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Res,
+  ServiceUnavailableException,
   // UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
@@ -12,7 +14,8 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { ProductDto } from './DTO/product.dto';
-import { Observable } from 'rxjs';
+import { NotFoundError, Observable } from 'rxjs';
+import { Response } from 'express';
 
 //@ApiBearerAuth()
 @ApiTags('Products')
@@ -30,7 +33,11 @@ export class ProductsController {
     description: 'Retorna a lista de produtos',
   })
   // UseGuards()
-  async index(): Promise<Observable<ProductDto[]>> {
-    return this.productsService.getProducts();
+  async index() {
+    try {
+      return await this.productsService.getProducts();
+    } catch (error) {
+      throw new ServiceUnavailableException('O serviço não respondeu a tempo');
+    }
   }
 }

@@ -8,7 +8,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @MessagePattern({ cmd: 'get-products' })
-  async getProducts(): Promise<ProductDto[]> {
+  async getProducts(@Payload() payload: any): Promise<ProductDto[]> {
     return await this.productsService.findAll();
   }
 

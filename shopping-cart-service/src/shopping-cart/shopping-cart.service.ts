@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShoppingCart } from './entities/shopping-cart.entity';
 import { Product } from './entities/products.entity';
 import { ShoppingCartDto } from './dto/shopping-cart.dto';
 import { ClientProxy } from '@nestjs/microservices';
-import { NotFoundError, firstValueFrom } from 'rxjs';
+import { NotFoundError, Observable, firstValueFrom, of, timeout } from 'rxjs';
 
 type Operation = 'add' | 'sub';
 type Totals = { totalPrice: number; totalQuantity: number };
@@ -16,10 +16,10 @@ type updateReturn = {
 @Injectable()
 export class ShoppingCartService {
   constructor(
-    @InjectRepository(ShoppingCart)
-    private readonly shoppingCartRepository: Repository<ShoppingCart>,
     @Inject('PRODUCTS_SERVICE')
     private readonly productServiceClient: ClientProxy,
+    @InjectRepository(ShoppingCart)
+    private readonly shoppingCartRepository: Repository<ShoppingCart>,
   ) {}
 
   findAllbyUser(userId: number) {
@@ -27,6 +27,7 @@ export class ShoppingCartService {
   }
 
   getTotals(products: Product[]): Totals {
+    console.log('productsToGetTotal', products);
     let totalPrice = 0;
     let totalQuantity = 0;
 
@@ -34,14 +35,32 @@ export class ShoppingCartService {
       totalPrice += product.price;
       totalQuantity += product.quantity;
     }
-
+    console.log('totalQuantity', totalQuantity);
+    console.log('totalPrice', totalPrice);
     return { totalPrice, totalQuantity };
   }
 
-  async getProductById(productId: string): Promise<Product> {
-    return await firstValueFrom(
-      this.productServiceClient.send<Product>('get-by-id', productId),
-    );
+  async getProductById(product: Product) {
+    try {
+      const product$ = this.productServiceClient
+        .send<Product>({ cmd: 'get-by-id' }, product.productId)
+        .pipe(timeout(5000));
+      const newProduct = await firstValueFrom(product$);
+
+      if (!newProduct) {
+        console.error('erro ao executar productServiceClient ');
+        throw new NotFoundException(
+          `produto with id ${product.productId} not found`,
+        );
+      }
+      newProduct.quantity = product.quantity;
+      return newProduct;
+    } catch (error) {
+      console.error(
+        'erro ao executar this.productServiceClient.send<Product>(get-by-id, { productId })',
+      );
+      throw error;
+    }
   }
 
   async removeProducts(
@@ -60,7 +79,7 @@ export class ShoppingCartService {
 
     updateProducts.map((updateProduct) => {
       const productIndex = oldProducts.findIndex(
-        (p) => p.id === updateProduct.id,
+        (p) => p.productId === updateProduct.productId,
       ); // procura produta a ser atualizado
       if (productIndex !== -1) {
         // produto existe
@@ -81,7 +100,7 @@ export class ShoppingCartService {
       } else {
         // produto a ser removido nao existe na lista atual de produtos
         throw new Error(
-          `Product with id ${updateProduct.id} not foundin Shopping cart`,
+          `Product with id ${updateProduct.productId} not foundin Shopping cart`,
         );
       }
     });
@@ -104,7 +123,7 @@ export class ShoppingCartService {
     const { products, userId } = shoppingCart;
     const { shoppingCartId } = shoppingCart;
     if (!shoppingCartId) {
-      return this.createShoppingCart(userId, products);
+      return await this.createShoppingCart(userId, products);
     }
 
     try {
@@ -115,17 +134,19 @@ export class ShoppingCartService {
       if (!shoppingCartExist) {
         throw new Error(`Shopping cart with id ${shoppingCartId} not found`);
       }
-      const oldProducts: Product[] = [...shoppingCartExist.products];
-      const updateProducts: Product[] = [...products];
+      const oldProducts: any[] = [...shoppingCartExist.products];
+      const updateProducts = [...products];
 
-      Promise.all(
+      await Promise.all(
         updateProducts.map(async (updateProduct) => {
           const productIndex = oldProducts.findIndex(
-            (p) => p.id === updateProduct.id,
+            (p) => p.productId === updateProduct.productId,
           ); // procura item a ser atualizado entre os itens atuais
           if (productIndex === -1) {
+            console.log('addProducts - shoppingCartExist');
             // item a ser atualizado nao existe atualmente entao sera adicionado
-            const newProduct = await this.getProductById(updateProduct.id);
+            const newProduct = await this.getProductById(updateProduct);
+
             oldProducts.push(newProduct);
           } else {
             oldProducts[productIndex].quantity += updateProduct.quantity;
@@ -144,7 +165,8 @@ export class ShoppingCartService {
         }),
       );
     } catch (error) {
-      throw error;
+      console.error('error inside addProducts', error);
+      return error;
     }
   }
 
@@ -153,19 +175,27 @@ export class ShoppingCartService {
     products: Partial<Product[]>,
   ): Promise<ShoppingCartDto> {
     const newProducts: Product[] = [];
-    Promise.all(
+    console.log('chegou no create');
+
+    await Promise.all(
       products.map(async (p) => {
-        const newProduct = await this.getProductById(p.id);
+        console.log('productsTofind', p);
+        const newProduct = await this.getProductById(p);
+        console.log('newProduct', newProduct);
         newProducts.push(newProduct);
       }),
     );
-    const { totalPrice, totalQuantity } = this.getTotals(products);
+
+    console.log('newProducts', newProducts);
+    const { totalPrice, totalQuantity } = this.getTotals(newProducts);
     const cart: Omit<ShoppingCartDto, 'shoppingCartId'> = {
       products: newProducts,
       userId,
       totalPrice,
       totalQuantity,
     };
+    console.log('before save');
+    console.log('cart', cart);
     return this.shoppingCartRepository.save(cart);
   }
 }
