@@ -17,7 +17,7 @@ para iniciar os bancos
  ```docker-compose up```
 
 
--  Infelizmente os servicos nao rodam em docker devido a problema com a compilação do bcrypt, então será necessário subir o docker-compose dos bancos e depois entrar dentro de cada serviço com um novo terminal rode ```npm run start:dev```
+-  Infelizmente os servicos nao rodam em docker devido a problema com a compilação do bcrypt, então será necessário subir o docker-compose dos bancos e depois entrar dentro de cada serviço com um novo terminal rode ```npm install``` e depois ```npm run start:dev```
 
 # Swagger
 
