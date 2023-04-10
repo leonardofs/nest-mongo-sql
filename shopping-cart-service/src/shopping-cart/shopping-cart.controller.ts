@@ -11,7 +11,7 @@ type updateReturn = {
 export class ShoppingCartController {
   constructor(private readonly shoppingCartService: ShoppingCartService) {}
 
-  @MessagePattern({ cmd: 'find-carts-for-user' })
+  @MessagePattern({ cmd: 'find-carts-from-user' })
   async findAllbyUser(@Payload() id: number) {
     return this.shoppingCartService.findAllbyUser(id);
   }
@@ -32,6 +32,7 @@ export class ShoppingCartController {
     @Payload() shoppingCart: ShoppingCartDto,
   ): Promise<ShoppingCartDto> {
     try {
+      console.log('remove-from-shopping-cart', shoppingCart);
       return await this.shoppingCartService.removeProducts(shoppingCart);
     } catch (error) {
       throw error;

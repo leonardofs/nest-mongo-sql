@@ -5,14 +5,10 @@ import { ShoppingCart } from './entities/shopping-cart.entity';
 import { Product } from './entities/products.entity';
 import { ShoppingCartDto } from './dto/shopping-cart.dto';
 import { ClientProxy } from '@nestjs/microservices';
-import { NotFoundError, Observable, firstValueFrom, of, timeout } from 'rxjs';
+import { firstValueFrom, of, timeout } from 'rxjs';
 
-type Operation = 'add' | 'sub';
 type Totals = { totalPrice: number; totalQuantity: number };
-type updateReturn = {
-  success: boolean;
-  message: string;
-};
+
 @Injectable()
 export class ShoppingCartService {
   constructor(
@@ -31,7 +27,7 @@ export class ShoppingCartService {
     let totalQuantity = 0;
 
     for (const product of products) {
-      totalPrice += product.price;
+      totalPrice += product.price * product.quantity;
       totalQuantity += product.quantity;
     }
 
@@ -52,9 +48,7 @@ export class ShoppingCartService {
       newProduct.quantity = product.quantity;
       return newProduct;
     } catch (error) {
-      console.error(
-        'erro ao executar this.productServiceClient.send<Product>(get-by-id, { productId })',
-      );
+      console.error('erro ao executar productServiceClient');
       throw error;
     }
   }
@@ -72,7 +66,13 @@ export class ShoppingCartService {
     }
     const oldProducts = [...shoppingCartExist.products];
     const updateProducts: Product[] = [...products];
-
+    console.log(
+      `ids ${updateProducts[0].productId} ${
+        updateProducts[0].productId
+      } are equals? ${
+        updateProducts[0].productId == updateProducts[0].productId
+      }`,
+    );
     updateProducts.map((updateProduct) => {
       const productIndex = oldProducts.findIndex(
         (p) => p.productId === updateProduct.productId,
@@ -95,8 +95,8 @@ export class ShoppingCartService {
         }
       } else {
         // produto a ser removido nao existe na lista atual de produtos
-        throw new Error(
-          `Product with id ${updateProduct.productId} not foundin Shopping cart`,
+        throw new NotFoundException(
+          `Product with id ${updateProduct.productId} not found in Shopping cart ${shoppingCart.shoppingCartId}`,
         );
       }
     });

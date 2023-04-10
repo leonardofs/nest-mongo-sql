@@ -19,10 +19,9 @@ export class ShoppingCartService {
 
   findCartsFromUser(userId: number) {
     const pattern = { cmd: 'find-carts-from-user' };
-    const data = { userId };
 
     const carts = this.shoppingCartClient
-      .send<CartDto[]>(pattern, data)
+      .send<CartDto[]>(pattern, userId)
       .pipe(timeout(5000));
     if (!carts) {
       throw new NotFoundException('Internal Error');
@@ -36,7 +35,7 @@ export class ShoppingCartService {
     products: RemoveProductDto[],
   ) {
     const pattern = { cmd: 'remove-from-shopping-cart' };
-    const data = { userId, products };
+    const data = { userId, products, shoppingCartId: cartId };
     const resultCart = await firstValueFrom(
       this.shoppingCartClient.send<CartDto>(pattern, data).pipe(timeout(5000)),
     );
