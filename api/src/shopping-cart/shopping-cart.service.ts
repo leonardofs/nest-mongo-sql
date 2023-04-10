@@ -17,7 +17,7 @@ export class ShoppingCartService {
     private readonly shoppingCartClient: ClientProxy,
   ) {}
 
-  findCartsFromUser(userId: number) {
+  findCartsFromUser(userId = 1) {
     const pattern = { cmd: 'find-carts-from-user' };
 
     const carts = this.shoppingCartClient
@@ -31,7 +31,7 @@ export class ShoppingCartService {
 
   async removeProduct(
     cartId: string,
-    userId: number,
+    userId = 1,
     products: RemoveProductDto[],
   ) {
     const pattern = { cmd: 'remove-from-shopping-cart' };
@@ -39,17 +39,11 @@ export class ShoppingCartService {
     const resultCart = await firstValueFrom(
       this.shoppingCartClient.send<CartDto>(pattern, data).pipe(timeout(5000)),
     );
-    // .pipe(map((res): CartDto => res.data))
-    // .pipe(
-    //   catchError((error) => {
-    //     console.error(error); // TODO use logger
-    //     throw new ForbiddenException('Service Unavaliable');
-    //   }),
-    // );
+
     return resultCart;
   }
   addProduct(
-    userId: number,
+    userId = 1,
     products: AddProductDto[],
     cartId: string = null,
   ): Observable<CartDto> {

@@ -16,13 +16,13 @@ export default class TypeOrmConfig {
       host: isDocker ? 'postgres' : 'localhost',
       port: isDocker
         ? 5432
-        : parseInt(configService.get('POSTGRES_MAPPED_PORT'), 10),
+        : parseInt(configService.get('POSTGRES_MAPPED_PORT'), 10) || 12545,
       username: configService.get('POSTGRES_USER'),
       password: configService.get('POSTGRES_PASSWORD'),
       database: configService.get('POSTGRES_DB'),
       entities: [ShoppingCart],
       synchronize: true,
-      logging: configService.get<LoggerOptions>('TYPEORM_LOGGING') || false,
+      //logging: configService.get<LoggerOptions>('TYPEORM_LOGGING') || false,
     };
   }
 }

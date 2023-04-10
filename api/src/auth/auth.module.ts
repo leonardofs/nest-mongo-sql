@@ -19,6 +19,7 @@ import { LoginValidationMiddleware } from './middlewares/login-validation.middle
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

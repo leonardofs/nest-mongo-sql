@@ -9,7 +9,7 @@ const getConnectionString = () => {
     process.env;
   const isDocker = process.env.NODE_ENV === 'docker';
   const mongoHost = isDocker ? MONGODB_HOST : 'localhost';
-  const mongoPort = isDocker ? 27017 : MONGO_MAPPED_PORT || 27017;
+  const mongoPort = isDocker ? 27017 : MONGO_MAPPED_PORT || 27025;
   const connectionString = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${mongoHost}:${mongoPort}/`;
   return connectionString;
 };

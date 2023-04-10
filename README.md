@@ -8,7 +8,7 @@ docker-compose
 ```
 
 ## Execução
-para iniciar todo o ambiente apenas execute no terminal
+para iniciar os bancos
 
  ```docker-compose build```
 
@@ -17,58 +17,18 @@ para iniciar todo o ambiente apenas execute no terminal
  ```docker-compose up```
 
 
-## TO DO
+-  Infelizmente os servicos nao rodam em docker devido a problema com a compilação do bcrypt, então será necessário subir o docker-compose dos bancos e depois entrar dentro de cada serviço com um novo terminal rode ```npm run start:dev```
 
-[X] create service api
+# Swagger
 
-[X] create module products
+A Api é documentada via OpenAPI (Swagger)
+rode a api e acesse a url  http://localhost:10420/swagger
+# Observações
+## Faltou testes, e auth (que ficou 99% pronto mas ta com bug dando 402 sem motivo)
 
-[X] create microservice products
 
-[X] create basic comunication api x products
+- Commits seguindo o padrão Conventional Commits
 
-[X] create docker compose with pg and services
+PS: Passei o feriado entrando madrugada adentro para tentar fazer parte da equipe KuantoKusta, por favor, olhem meu teste com carinho.
 
-[X] create dockerfile for API
-
-[X] create dockerfile for products ms
-
-[X] implement products connection typeorm
-
-[X] create products seed
-
-[X] create  shopping cart microservice
-
-[X] create update shopping cart services
-
-[X] create update shopping cart services
-
-[X] move application ports to docker-compose envs
-
-[X] create shopping cart module on api
-
-[X] implement comunication api x cart
-
-[X] implement comunication cart x products
-
-[X] implement uso of mongo (mongoose)
-
-[X] create dockerfile for  shopping cart ms
-
-[X] add all services, pg and mongo  to dockerfile
-
-[ ] implement class validator in both microsservices
-
-[ ] test all wanted functions running on docker
-
-[ ] implemnts swagger to API
-
-[ ] update readme
-
-[ ] create text about posibles improvements in security, 12 factors and resources
-
-[ ] implements auth microservice or module
-
-[ ] implements unit tests
-
-[ ] implement e2e tests
+- Qualquer duvida entrar em contato leonardoflavios@gmail.com ou https://www.linkedin.com/in/leonardo-flavio-santos/

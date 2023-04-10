@@ -1,22 +1,9 @@
-import {
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/authRequest';
 import { IsPublic } from './decorators/is-public.decorator';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserToken } from './models/UserToken';
 import { AuthDto } from './models/auth.dto';
 

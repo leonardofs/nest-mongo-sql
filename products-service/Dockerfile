@@ -16,8 +16,8 @@ RUN npm install
 # copiar o código-fonte para o diretório de trabalho
 COPY . .
 
-# expor a porta 3001
-EXPOSE 3001
+# expor a porta 10421
+EXPOSE 10421
 
 # comando de inicialização
 CMD ["npm", "run", "start:docker"]                

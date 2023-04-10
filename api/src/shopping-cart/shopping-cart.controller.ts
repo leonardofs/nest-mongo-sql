@@ -26,8 +26,10 @@ import { Observable } from 'rxjs';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+
+//@ApiBearerAuth()
+//@UseGuards(JwtAuthGuard)
+//FIXME solve auth problems
 @ApiTags('Cart')
 @Controller('cart')
 export class ShoppingCartController {
@@ -78,7 +80,6 @@ export class ShoppingCartController {
     @Body() addProducts: AddProductDto[],
   ) {
     const userId = currentUser.id;
-    //TODO userId obter pelo payload do jwt
     return this.shoppingCartService.addProduct(userId, addProducts, cartId);
   }
 
@@ -97,7 +98,6 @@ export class ShoppingCartController {
     @Body() removeProducts: RemoveProductDto[],
   ) {
     const userId = 1;
-    //TODO userId obter pelo payload do jwt
     return this.shoppingCartService.removeProduct(
       cartId,
       userId,

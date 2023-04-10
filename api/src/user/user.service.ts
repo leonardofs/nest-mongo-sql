@@ -8,7 +8,7 @@ export class UserService {
   private users: User[] = [
     {
       id: 1,
-      password: '$2a$10$zBV359M8lUY.lZncolGJQ.NOgsu0UtB4FZJJsLxfyXEtjc4.jOOTi', // mypassword
+      password: '$2b$05$IyFpbbC/T1T1Ap7qu1PVn.3qyJcNACmIAcOMAE/V5wxlXsIhyOxfS', // mypassword
       name: 'John Doe',
       email: 'user@example.com',
     },
@@ -19,7 +19,7 @@ export class UserService {
       id: this.users.length + 1,
       name: createUserDto.name,
       email: createUserDto.email,
-      password: await bcrypt.hash(createUserDto.password, 10),
+      password: await bcrypt.hash(createUserDto.password, 5),
     };
 
     this.users.push(data);
