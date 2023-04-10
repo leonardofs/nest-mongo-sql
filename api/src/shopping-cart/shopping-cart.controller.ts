@@ -31,7 +31,7 @@ export class ShoppingCartController {
   @ApiBearerAuth()
   @ApiOperation({
     summary:
-      'Retorna todos os carrinhso de um usuario, usa o barrier token para obter o userId do usuario',
+      'Retorna todos os carrinhos de um usuario, usa o barier token para obter o userId do usuario',
   })
   @ApiOkResponse({
     description: 'Carrinhos listados com sucesso',

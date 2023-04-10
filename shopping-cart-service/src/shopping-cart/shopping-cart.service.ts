@@ -27,7 +27,6 @@ export class ShoppingCartService {
   }
 
   getTotals(products: Product[]): Totals {
-    console.log('productsToGetTotal', products);
     let totalPrice = 0;
     let totalQuantity = 0;
 
@@ -35,8 +34,7 @@ export class ShoppingCartService {
       totalPrice += product.price;
       totalQuantity += product.quantity;
     }
-    console.log('totalQuantity', totalQuantity);
-    console.log('totalPrice', totalPrice);
+
     return { totalPrice, totalQuantity };
   }
 
@@ -48,10 +46,8 @@ export class ShoppingCartService {
       const newProduct = await firstValueFrom(product$);
 
       if (!newProduct) {
-        console.error('erro ao executar productServiceClient ');
-        throw new NotFoundException(
-          `produto with id ${product.productId} not found`,
-        );
+        console.error(`produto with id ${product.productId} not found`);
+        return null;
       }
       newProduct.quantity = product.quantity;
       return newProduct;
@@ -143,11 +139,9 @@ export class ShoppingCartService {
             (p) => p.productId === updateProduct.productId,
           ); // procura item a ser atualizado entre os itens atuais
           if (productIndex === -1) {
-            console.log('addProducts - shoppingCartExist');
             // item a ser atualizado nao existe atualmente entao sera adicionado
             const newProduct = await this.getProductById(updateProduct);
-
-            oldProducts.push(newProduct);
+            if (newProduct) oldProducts.push(newProduct);
           } else {
             oldProducts[productIndex].quantity += updateProduct.quantity;
           }
@@ -175,18 +169,14 @@ export class ShoppingCartService {
     products: Partial<Product[]>,
   ): Promise<ShoppingCartDto> {
     const newProducts: Product[] = [];
-    console.log('chegou no create');
 
     await Promise.all(
       products.map(async (p) => {
-        console.log('productsTofind', p);
         const newProduct = await this.getProductById(p);
-        console.log('newProduct', newProduct);
-        newProducts.push(newProduct);
+        if (newProduct) newProducts.push(newProduct);
       }),
     );
 
-    console.log('newProducts', newProducts);
     const { totalPrice, totalQuantity } = this.getTotals(newProducts);
     const cart: Omit<ShoppingCartDto, 'shoppingCartId'> = {
       products: newProducts,
@@ -194,8 +184,7 @@ export class ShoppingCartService {
       totalPrice,
       totalQuantity,
     };
-    console.log('before save');
-    console.log('cart', cart);
+
     return this.shoppingCartRepository.save(cart);
   }
 }
