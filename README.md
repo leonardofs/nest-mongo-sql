@@ -29,6 +29,3 @@ rode a api e acesse a url  http://localhost:10420/swagger
 
 - Commits seguindo o padrão Conventional Commits
 
-PS: Passei o feriado entrando madrugada adentro para tentar fazer parte da equipe KuantoKusta, por favor, olhem meu teste com carinho.
-
-- Qualquer duvida entrar em contato leonardoflavios@gmail.com ou https://www.linkedin.com/in/leonardo-flavio-santos/
